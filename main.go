@@ -1,6 +1,7 @@
 package logruswrapper
 
 import (
+	"os"
 	"strings"
 	"syscall"
 
@@ -18,8 +19,10 @@ func init() {
 	gelfFmt := formatter.NewGelf(hostname)
 	Logger.SetFormatter(gelfFmt)
 
+	Logger.Out = os.Stderr
+
 	loglevel, _ := syscall.Getenv("LOGLEVEL")
-	loglevel = strings.ToUpper(loglevel)
+	loglevel = strings.ToUpper(strings.Trim(loglevel, "\""))
 	switch loglevel {
 	case "PANIC":
 		Logger.SetLevel(logrus.PanicLevel)
